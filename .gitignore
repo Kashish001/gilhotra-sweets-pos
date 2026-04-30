@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+win-unpacked/
+*.exe
+
+# Database & Environment (CRITICAL FOR PRIVACY)
+pb_data/
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db

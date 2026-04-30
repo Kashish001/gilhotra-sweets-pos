@@ -1,0 +1,36 @@
+{
+  "name": "gilhotra-sweets-app",
+  "version": "1.0.0",
+  "description": "Dashboard for Gilhotra Sweet House",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "build:win": "electron-builder --win --dir"
+  },
+  "build": {
+    "appId": "com.gilhotrasweets.pos",
+    "productName": "Gilhotra Sweets POS",
+    "win": {
+      "target": "nsis"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "YOUR_GITHUB_USERNAME",
+        "repo": "gilhotra-sweets-pos"
+      }
+    ],
+    "extraResources": [
+      "bin/**/*",
+      "pb_migrations/**/*"
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3",
+    "pocketbase": "^0.21.1"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}
