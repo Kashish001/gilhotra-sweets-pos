@@ -1,11 +1,15 @@
 {
   "name": "gilhotra-sweets-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dashboard for Gilhotra Sweet House",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kashish001/gilhotra-sweets-pos.git"
+  },
   "scripts": {
     "start": "electron . --no-sandbox",
-    "build:win": "electron-builder --win --dir"
+    "build:win": "electron-builder --win"
   },
   "build": {
     "appId": "com.gilhotrasweets.pos",
@@ -16,7 +20,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "YOUR_GITHUB_USERNAME",
+        "owner": "kashish001",
         "repo": "gilhotra-sweets-pos"
       }
     ],
