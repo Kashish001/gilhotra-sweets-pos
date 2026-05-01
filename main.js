@@ -19,17 +19,31 @@ function startDatabase() {
   // 3. Map the exact paths
   const pbDataDir = path.join(app.getPath("userData"), "pb_data");
 
+  // NEW: Explicitly map the exact path to the bin/pb_migrations folder!
+  const pbMigrationsDir = path.join(rootFolder, "bin", "pb_migrations");
+
   console.log("=======================================");
   console.log("--> RUNNING EXECUTABLE FROM:", pbPath);
   console.log("--> SAVING/READING DATA AT:", pbDataDir);
+  console.log("--> READING MIGRATIONS FROM:", pbMigrationsDir);
   console.log("=======================================");
 
-  // 4. Force PocketBase to use the root directory for EVERYTHING
-  pbProcess = spawn(pbPath, ["serve", "--dir", pbDataDir], {
-    cwd: rootFolder, // <-- THIS IS THE MAGIC LINE
-    detached: false,
-    stdio: "ignore",
-  });
+  // 4. Force PocketBase to use the root directory and explicitly point to migrations
+  pbProcess = spawn(
+    pbPath,
+    [
+      "serve",
+      "--dir",
+      pbDataDir,
+      "--migrationsDir",
+      pbMigrationsDir, // <-- THIS GUARANTEES MIGRATIONS RUN
+    ],
+    {
+      cwd: rootFolder, // <-- THIS IS THE MAGIC LINE
+      detached: false,
+      stdio: "ignore",
+    },
+  );
 
   pbProcess.on("error", (err) => {
     console.error("Failed to start PocketBase database:", err);
