@@ -20,7 +20,7 @@ function startDatabase() {
   const pbDataDir = path.join(app.getPath("userData"), "pb_data");
 
   // NEW: Explicitly map the exact path to the bin/pb_migrations folder!
-  const pbMigrationsDir = path.join(rootFolder, "bin", "pb_migrations");
+  const pbMigrationsDir = path.join(rootFolder, "pb_migrations");
 
   console.log("=======================================");
   console.log("--> RUNNING EXECUTABLE FROM:", pbPath);

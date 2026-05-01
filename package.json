@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "electron . --no-sandbox",
-    "build:win": "electron-builder --win"
+    "build:win": "electron-builder --win",
+    "migrate": "./bin/pocketbase migrate collections --migrationsDir=./pb_migrations"
   },
   "build": {
     "appId": "com.gilhotrasweets.pos",
