@@ -97,6 +97,7 @@
                 </button>
             </div>
         </div>
+
         <div
             id="loader"
             style="
@@ -157,7 +158,6 @@
                             font-weight: bold;
                         "
                     ></div>
-
                     <button
                         class="theme-tog"
                         id="ttog"
@@ -213,7 +213,9 @@
                                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
                             "
                         >
+                            <!-- NEW: Added ID 'dash-log-title' to control the text dynamically -->
                             <div
+                                id="dash-log-title"
                                 style="
                                     background: var(--bg-surface);
                                     padding: 14px 20px;
@@ -686,17 +688,16 @@
                     <div class="mbody">
                         <div class="fg">
                             <div class="ff">
-                                <label>Bill No. (Page No.)</label>
-                                <input
+                                <label>Bill No. (Page No.)</label
+                                ><input
                                     id="f-billNo"
                                     placeholder="Leave blank to auto-generate"
                                 />
                             </div>
                             <div class="ff">
-                                <label>Date</label>
-                                <input id="f-date" type="date" />
+                                <label>Date</label
+                                ><input id="f-date" type="date" />
                             </div>
-
                             <div
                                 class="ff full"
                                 style="
@@ -724,27 +725,27 @@
                                 ></div>
                             </div>
                             <div class="ff">
-                                <label>Father's Name (S/O)</label>
-                                <input id="f-so" placeholder="Son of" />
+                                <label>Father's Name (S/O)</label
+                                ><input id="f-so" placeholder="Son of" />
                             </div>
                             <div class="ff">
-                                <label>Mobile</label>
-                                <input
+                                <label>Mobile</label
+                                ><input
                                     id="f-mobile"
                                     type="tel"
                                     placeholder="9876543210"
                                 />
                             </div>
                             <div class="ff">
-                                <label>Village / Area</label>
-                                <input
+                                <label>Village / Area</label
+                                ><input
                                     id="f-village"
                                     placeholder="Village or area"
                                 />
                             </div>
                             <div class="ff full">
-                                <label>Care of (C/O)</label>
-                                <input id="f-co" placeholder="Referred by" />
+                                <label>Care of (C/O)</label
+                                ><input id="f-co" placeholder="Referred by" />
                             </div>
 
                             <div
@@ -806,8 +807,8 @@
                             </div>
 
                             <div class="ff">
-                                <label>Total Bill (&#8377;)</label>
-                                <input
+                                <label>Total Bill (&#8377;)</label
+                                ><input
                                     id="f-total"
                                     type="number"
                                     step="any"
@@ -821,8 +822,8 @@
                                 />
                             </div>
                             <div class="ff">
-                                <label>Advance Received (&#8377;)</label>
-                                <input
+                                <label>Advance Received (&#8377;)</label
+                                ><input
                                     id="f-adv"
                                     type="number"
                                     step="any"
@@ -832,8 +833,8 @@
                                 />
                             </div>
                             <div class="ff">
-                                <label>Pending Balance (Auto)</label>
-                                <input
+                                <label>Pending Balance (Auto)</label
+                                ><input
                                     id="f-pend"
                                     readonly
                                     placeholder="0"
@@ -853,12 +854,12 @@
                                 </select>
                             </div>
                             <div class="ff">
-                                <label>Due Date</label>
-                                <input id="f-due" type="date" />
+                                <label>Due Date</label
+                                ><input id="f-due" type="date" />
                             </div>
                             <div class="ff full">
-                                <label>Remarks</label>
-                                <input
+                                <label>Remarks</label
+                                ><input
                                     id="f-rem"
                                     placeholder="Optional notes for this bill..."
                                 />
@@ -1079,7 +1080,6 @@
                                 </select>
                             </div>
 
-                            <!-- NEW STOCK CONTROLS -->
                             <div
                                 class="ff full"
                                 style="
@@ -1166,7 +1166,6 @@
                         </button>
                     </div>
                     <div class="mbody">
-                        <!-- Replace the inner .fg grid inside the ov-staff modal -->
                         <div class="fg">
                             <div class="ff full">
                                 <label>Employee Name</label>
@@ -1205,8 +1204,6 @@
                                     <option value="Left">Left Job</option>
                                 </select>
                             </div>
-
-                            <!-- Toggles -->
                             <div
                                 class="ff full"
                                 style="
@@ -1295,8 +1292,7 @@
             </div>
 
             <div class="ov" id="ov-khata">
-                <!-- Increased width from 600px to 750px for breathing room -->
-                <div class="mbox" style="width: 750px">
+                <div class="mbox" style="width: 950px">
                     <div class="mhd">
                         <div>
                             <div class="mtitle" id="khata-title">
@@ -1316,13 +1312,12 @@
                         </button>
                     </div>
                     <div class="mbody" style="background: var(--bg-app)">
-                        <!-- 3 Action Boxes: Now using a uniform 3-column grid with stacked inputs -->
                         <div
                             style="
                                 display: grid;
                                 grid-template-columns: repeat(3, 1fr);
                                 gap: 16px;
-                                margin-bottom: 24px;
+                                margin-bottom: 16px;
                             "
                         >
                             <!-- Box 1: Add Salary -->
@@ -1332,9 +1327,6 @@
                                     padding: 16px;
                                     border: 1px solid var(--green);
                                     border-radius: 8px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: space-between;
                                 "
                             >
                                 <div
@@ -1348,40 +1340,33 @@
                                 >
                                     + Add Salary (Earned)
                                 </div>
-                                <div
+                                <input
+                                    id="k-add-amt"
+                                    type="number"
+                                    placeholder="&#8377; Amount"
                                     style="
-                                        display: flex;
-                                        flex-direction: column;
-                                        gap: 8px;
+                                        width: 100%;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                        margin-bottom: 12px;
                                     "
+                                />
+                                <button
+                                    class="btn"
+                                    style="
+                                        background: var(--green);
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 12px;
+                                        width: 100%;
+                                        font-weight: bold;
+                                    "
+                                    onclick="postKhata('salary')"
                                 >
-                                    <input
-                                        id="k-add-amt"
-                                        type="number"
-                                        placeholder="&#8377; Amount"
-                                        style="
-                                            width: 100%;
-                                            padding: 8px 12px;
-                                            border: 1px solid var(--bd);
-                                            border-radius: 6px;
-                                            background: var(--bg-input);
-                                        "
-                                    />
-                                    <button
-                                        class="btn"
-                                        style="
-                                            background: var(--green);
-                                            color: white;
-                                            border: none;
-                                            padding: 8px 12px;
-                                            width: 100%;
-                                            font-weight: bold;
-                                        "
-                                        onclick="postKhata('salary')"
-                                    >
-                                        Add to Khata
-                                    </button>
-                                </div>
+                                    Add to Khata
+                                </button>
                             </div>
 
                             <!-- Box 2: Give Cash -->
@@ -1391,9 +1376,6 @@
                                     padding: 16px;
                                     border: 1px solid var(--red);
                                     border-radius: 8px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: space-between;
                                 "
                             >
                                 <div
@@ -1407,40 +1389,33 @@
                                 >
                                     - Give Cash / Advance
                                 </div>
-                                <div
+                                <input
+                                    id="k-sub-amt"
+                                    type="number"
+                                    placeholder="&#8377; Amount"
                                     style="
-                                        display: flex;
-                                        flex-direction: column;
-                                        gap: 8px;
+                                        width: 100%;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                        margin-bottom: 12px;
                                     "
+                                />
+                                <button
+                                    class="btn"
+                                    style="
+                                        background: var(--red);
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 12px;
+                                        width: 100%;
+                                        font-weight: bold;
+                                    "
+                                    onclick="postKhata('cash')"
                                 >
-                                    <input
-                                        id="k-sub-amt"
-                                        type="number"
-                                        placeholder="&#8377; Amount"
-                                        style="
-                                            width: 100%;
-                                            padding: 8px 12px;
-                                            border: 1px solid var(--bd);
-                                            border-radius: 6px;
-                                            background: var(--bg-input);
-                                        "
-                                    />
-                                    <button
-                                        class="btn"
-                                        style="
-                                            background: var(--red);
-                                            color: white;
-                                            border: none;
-                                            padding: 8px 12px;
-                                            width: 100%;
-                                            font-weight: bold;
-                                        "
-                                        onclick="postKhata('cash')"
-                                    >
-                                        Give Cash
-                                    </button>
-                                </div>
+                                    Give Cash
+                                </button>
                             </div>
 
                             <!-- Box 3: Mark Leave -->
@@ -1450,9 +1425,6 @@
                                     padding: 16px;
                                     border: 1px solid var(--amber);
                                     border-radius: 8px;
-                                    display: flex;
-                                    flex-direction: column;
-                                    justify-content: space-between;
                                 "
                             >
                                 <div
@@ -1466,41 +1438,177 @@
                                 >
                                     &#9971;&#65039; Mark Leave
                                 </div>
-                                <div
+                                <input
+                                    id="k-leave-date"
+                                    type="date"
                                     style="
+                                        width: 100%;
+                                        padding: 7px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                        font-family: inherit;
+                                        font-size: 13px;
+                                        margin-bottom: 12px;
+                                    "
+                                />
+                                <button
+                                    class="btn"
+                                    style="
+                                        background: var(--amber);
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 12px;
+                                        width: 100%;
+                                        font-weight: bold;
+                                    "
+                                    onclick="postLeave()"
+                                >
+                                    Mark Leave
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Horizontal Row for Complex Item Entry -->
+                        <div
+                            style="
+                                background: var(--bg-card);
+                                padding: 16px;
+                                border: 1px solid var(--accent);
+                                border-radius: 8px;
+                                margin-bottom: 24px;
+                            "
+                        >
+                            <div
+                                style="
+                                    font-size: 11px;
+                                    color: var(--accent);
+                                    font-weight: bold;
+                                    margin-bottom: 12px;
+                                    text-transform: uppercase;
+                                "
+                            >
+                                &#128230; Give Shop Item
+                            </div>
+
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 12px;
+                                    align-items: center;
+                                "
+                            >
+                                <input
+                                    id="k-item-date"
+                                    type="date"
+                                    style="
+                                        width: 130px;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                        font-family: inherit;
+                                        font-size: 13px;
+                                    "
+                                />
+                                <!-- ADDED: onchange trigger to auto-fill the rate -->
+                                <select
+                                    id="k-item-sel"
+                                    onchange="onKhataItemSelect()"
+                                    style="
+                                        flex: 2;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                        font-family: inherit;
+                                        font-size: 13px;
+                                    "
+                                ></select>
+                                <input
+                                    id="k-item-qty"
+                                    type="number"
+                                    step="any"
+                                    placeholder="Qty"
+                                    style="
+                                        width: 80px;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                    "
+                                />
+                                <!-- ADDED: Rate input box -->
+                                <input
+                                    id="k-item-rate"
+                                    type="number"
+                                    step="any"
+                                    placeholder="Rate (&#8377;)"
+                                    style="
+                                        width: 100px;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                    "
+                                />
+                                <input
+                                    id="k-item-rem"
+                                    placeholder="Remarks (Optional)"
+                                    style="
+                                        flex: 3;
+                                        padding: 8px 12px;
+                                        border: 1px solid var(--bd);
+                                        border-radius: 6px;
+                                        background: var(--bg-input);
+                                    "
+                                />
+                            </div>
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-top: 16px;
+                                "
+                            >
+                                <label
+                                    style="
+                                        font-size: 13px;
                                         display: flex;
-                                        flex-direction: column;
+                                        align-items: center;
                                         gap: 8px;
+                                        cursor: pointer;
+                                        color: var(--tx-1);
+                                        font-weight: bold;
                                     "
                                 >
                                     <input
-                                        id="k-leave-date"
-                                        type="date"
+                                        type="checkbox"
+                                        id="k-item-deduct"
+                                        checked
                                         style="
-                                            width: 100%;
-                                            padding: 7px 12px;
-                                            border: 1px solid var(--bd);
-                                            border-radius: 6px;
-                                            background: var(--bg-input);
-                                            font-family: inherit;
-                                            font-size: 13px;
+                                            transform: scale(1.2);
+                                            accent-color: var(--accent);
+                                            cursor: pointer;
                                         "
                                     />
-                                    <button
-                                        class="btn"
-                                        style="
-                                            background: var(--amber);
-                                            color: white;
-                                            border: none;
-                                            padding: 8px 12px;
-                                            width: 100%;
-                                            font-weight: bold;
-                                        "
-                                        onclick="postLeave()"
-                                    >
-                                        Mark Leave
-                                    </button>
-                                </div>
+                                    Cut money from Khata Balance
+                                </label>
+                                <button
+                                    class="btn btn-a"
+                                    style="
+                                        background: var(--accent);
+                                        color: white;
+                                        border: none;
+                                        padding: 8px 32px;
+                                        font-weight: bold;
+                                    "
+                                    onclick="postItem()"
+                                >
+                                    Give Item
+                                </button>
                             </div>
                         </div>
 
@@ -1530,6 +1638,13 @@
                                     >0</span
                                 >)
                             </button>
+                            <button
+                                class="cpill"
+                                id="tab-items"
+                                onclick="switchKhataTab('items')"
+                            >
+                                Items Taken (<span id="item-count-bdg">0</span>)
+                            </button>
                         </div>
 
                         <div
@@ -1539,10 +1654,18 @@
                                 border: 1px solid var(--bd);
                                 border-radius: 8px;
                                 overflow: hidden;
+                                height: 220px;
+                                overflow-y: auto;
                             "
                         >
                             <table style="width: 100%; font-size: 13px">
-                                <thead style="background: var(--bg-surface)">
+                                <thead
+                                    style="
+                                        background: var(--bg-surface);
+                                        position: sticky;
+                                        top: 0;
+                                    "
+                                >
                                     <tr>
                                         <th
                                             style="
@@ -1585,10 +1708,18 @@
                                 border: 1px solid var(--bd);
                                 border-radius: 8px;
                                 overflow: hidden;
+                                height: 220px;
+                                overflow-y: auto;
                             "
                         >
                             <table style="width: 100%; font-size: 13px">
-                                <thead style="background: var(--bg-surface)">
+                                <thead
+                                    style="
+                                        background: var(--bg-surface);
+                                        position: sticky;
+                                        top: 0;
+                                    "
+                                >
                                     <tr>
                                         <th
                                             style="
@@ -1613,10 +1744,74 @@
                                 <tbody id="leave-tbody"></tbody>
                             </table>
                         </div>
+
+                        <div
+                            id="khata-items-view"
+                            style="
+                                display: none;
+                                background: var(--bg-card);
+                                border: 1px solid var(--bd);
+                                border-radius: 8px;
+                                overflow: hidden;
+                                height: 220px;
+                                overflow-y: auto;
+                            "
+                        >
+                            <table style="width: 100%; font-size: 13px">
+                                <thead
+                                    style="
+                                        background: var(--bg-surface);
+                                        position: sticky;
+                                        top: 0;
+                                    "
+                                >
+                                    <tr>
+                                        <th
+                                            style="
+                                                padding: 10px 16px;
+                                                text-align: left;
+                                                color: var(--tx-3);
+                                            "
+                                        >
+                                            Date
+                                        </th>
+                                        <th
+                                            style="
+                                                padding: 10px 16px;
+                                                text-align: left;
+                                                color: var(--tx-3);
+                                            "
+                                        >
+                                            Item Details
+                                        </th>
+                                        <th
+                                            style="
+                                                padding: 10px 16px;
+                                                text-align: left;
+                                                color: var(--tx-3);
+                                            "
+                                        >
+                                            Remarks
+                                        </th>
+                                        <th
+                                            style="
+                                                padding: 10px 16px;
+                                                text-align: right;
+                                                color: var(--tx-3);
+                                            "
+                                        >
+                                            Value
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="items-tbody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- THE UNIVERSAL APP DIALOG -->
         <div class="ov L" id="ov-dialog" style="z-index: 10005">
             <div
@@ -1639,16 +1834,14 @@
                 ></div>
             </div>
         </div>
+
         <script src="../node_modules/pocketbase/dist/pocketbase.umd.js"></script>
-        <!-- Load DB and Auth First -->
         <script src="js/db.js"></script>
         <script src="js/auth.js"></script>
-        <!-- Load Features -->
         <script src="js/pos.js"></script>
         <script src="js/ledger.js"></script>
         <script src="js/staff.js"></script>
         <script src="js/items.js"></script>
-        <!-- Load Main Bootstrapper Last -->
         <script src="js/app.js"></script>
     </body>
 </html>

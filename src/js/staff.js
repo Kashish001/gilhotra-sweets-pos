@@ -68,6 +68,11 @@ function openStaffModal(id = null) {
     document.getElementById("sf-doj").value = "";
     document.getElementById("sf-deductLeave").checked = false;
   }
+
+  // Restrict Future DOJ
+  document.getElementById("sf-doj").max = new Date()
+    .toISOString()
+    .split("T")[0];
   openOv("ov-staff");
 }
 
@@ -101,7 +106,25 @@ async function saveStaff() {
   }
 }
 
-function openKhata(id) {
+// Add this new function anywhere in staff.js
+window.onKhataItemSelect = function () {
+  const itemId = document.getElementById("k-item-sel").value;
+  const rateInput = document.getElementById("k-item-rate");
+
+  if (!itemId) {
+    rateInput.value = "";
+    return;
+  }
+
+  const dbItem = items.find((i) => i.id === itemId);
+  if (dbItem) {
+    // Auto-fill the standard shop price
+    rateInput.value = dbItem.price;
+  }
+};
+
+// Update openKhata
+function openKhata(id, targetTab = "fin") {
   activeStaffId = id;
   const s = staff.find((x) => x.id === id);
   if (!s) return;
@@ -116,42 +139,85 @@ function openKhata(id) {
     `${s.name} <span style="font-size: 14px; margin-left: 10px; padding: 4px 10px; border-radius: 12px; background: var(--bg-surface); color: ${balColor};">${balText}</span>`;
   document.getElementById("khata-sub").textContent =
     `${s.role} \u2022 Base: ${inr(s.salary)}`;
+
+  // Reset all inputs
   document.getElementById("k-add-amt").value = "";
   document.getElementById("k-sub-amt").value = "";
+  document.getElementById("k-item-qty").value = "";
+  document.getElementById("k-item-rate").value = "";
+  document.getElementById("k-item-rem").value = "";
 
-  renderKhataTbody(s.khata);
-  document.getElementById("k-leave-date").value = new Date()
-    .toISOString()
-    .split("T")[0];
+  const todayStr = new Date().toISOString().split("T")[0];
+  const leaveDateEl = document.getElementById("k-leave-date");
+  const itemDateEl = document.getElementById("k-item-date");
+  leaveDateEl.value = todayStr;
+  leaveDateEl.max = todayStr;
+  itemDateEl.value = todayStr;
+  itemDateEl.max = todayStr;
+
+  document.getElementById("k-item-sel").innerHTML =
+    `<option value="">-- Select Item --</option>` +
+    items
+      .map(
+        (i) =>
+          `<option value="${i.id}">${i.name} (${inr(i.price)}/${i.unit})</option>`,
+      )
+      .join("");
+
   document.getElementById("leave-count-bdg").innerText = (
     s.leaves || []
   ).length;
+  document.getElementById("item-count-bdg").innerText = (s.khata || []).filter(
+    (k) => k.type === "item",
+  ).length;
+
+  renderKhataTbody(s.khata);
   renderLeaveTbody(s.leaves);
-  switchKhataTab("fin");
+  renderItemsTbody(s.khata);
+
+  // FIXED: Tell it to open the exact tab instantly without bouncing
+  switchKhataTab(targetTab);
   openOv("ov-khata");
 }
 
 function renderKhataTbody(khataArray) {
   const tb = document.getElementById("khata-tbody");
-  if (!khataArray || khataArray.length === 0) {
-    tb.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--tx-3);">No transactions yet.</td></tr>`;
+
+  // Financial Khata ONLY shows Items if they were actually DEDUCTED from the salary
+  const filteredKhata = (khataArray || []).filter(
+    (t) => t.type !== "item" || t.deducted === true,
+  );
+
+  if (filteredKhata.length === 0) {
+    tb.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--tx-3);">No financial transactions yet.</td></tr>`;
     return;
   }
-  const sorted = [...khataArray].sort(
+
+  const sorted = [...filteredKhata].sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
+
   tb.innerHTML = sorted
     .map((t) => {
       let isAdd = t.type === "salary";
       let isLeave = t.type === "leave";
+      let isItem = t.type === "item";
+
       let color = isAdd ? "var(--green)" : "var(--red)";
       let sign = isAdd ? "+" : "-";
       let label = isAdd
         ? "Salary / Credit"
         : isLeave
           ? "Leave Auto-Deduction"
-          : "Cash / Advance";
-      return `<tr style="border-bottom: 1px solid var(--bd);"><td style="padding: 10px 12px; color: var(--tx-2); font-size: 11px;">${fd(t.date)}</td><td style="padding: 10px 12px; font-weight: 500; color: var(--tx-1);">${label}</td><td style="padding: 10px 12px; text-align: right; font-weight: bold; color: ${color};">${sign} ${inr(t.amount)}</td></tr>`;
+          : isItem
+            ? `Item: ${t.itemName} (x${t.qty})`
+            : "Cash / Advance";
+
+      return `<tr style="border-bottom: 1px solid var(--bd);">
+        <td style="padding: 10px 12px; color: var(--tx-2); font-size: 11px;">${fd(t.date)}</td>
+        <td style="padding: 10px 12px; font-weight: 500; color: var(--tx-1);">${label}</td>
+        <td style="padding: 10px 12px; text-align: right; font-weight: bold; color: ${color};">${sign} ${inr(t.amount)}</td>
+      </tr>`;
     })
     .join("");
 }
@@ -173,13 +239,48 @@ function renderLeaveTbody(leaveArray) {
     .join("");
 }
 
+function renderItemsTbody(khataArray) {
+  const tb = document.getElementById("items-tbody");
+  const itemsList = (khataArray || []).filter((t) => t.type === "item");
+
+  if (itemsList.length === 0) {
+    tb.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--tx-3);">No items taken.</td></tr>`;
+    return;
+  }
+
+  const sorted = [...itemsList].sort(
+    (a, b) => new Date(b.date) - new Date(a.date),
+  );
+  tb.innerHTML = sorted
+    .map((t) => {
+      const deductBadge = t.deducted
+        ? `<span style="background:var(--red); color:white; padding:2px 6px; border-radius:4px; font-size:9px; margin-left:6px;">DEDUCTED</span>`
+        : `<span style="background:var(--green); color:white; padding:2px 6px; border-radius:4px; font-size:9px; margin-left:6px;">FREE</span>`;
+
+      return `<tr style="border-bottom: 1px solid var(--bd);">
+          <td style="padding: 10px 12px; color: var(--tx-2); font-size: 11px;">${fd(t.date)}</td>
+          <td style="padding: 10px 12px; font-weight: 500; color: var(--tx-1);">
+              ${t.itemName} <span style="color:var(--tx-3); font-size:11px;">x${t.qty}</span>
+              ${deductBadge}
+          </td>
+          <td style="padding: 10px 12px; color: var(--tx-2); font-size: 12px;">${t.remark || "\u2014"}</td>
+          <td style="padding: 10px 12px; text-align: right; font-weight: bold; color: var(--tx-1);">${inr(t.amount)}</td>
+      </tr>`;
+    })
+    .join("");
+}
+
 function switchKhataTab(tab) {
   document.getElementById("tab-fin").classList.toggle("on", tab === "fin");
   document.getElementById("tab-leave").classList.toggle("on", tab === "leave");
+  document.getElementById("tab-items").classList.toggle("on", tab === "items");
+
   document.getElementById("khata-fin-view").style.display =
     tab === "fin" ? "block" : "none";
   document.getElementById("khata-leave-view").style.display =
     tab === "leave" ? "block" : "none";
+  document.getElementById("khata-items-view").style.display =
+    tab === "items" ? "block" : "none";
 }
 
 async function postLeave() {
@@ -214,9 +315,10 @@ async function postLeave() {
       khata: khataArray,
       leaves: leavesArray,
     });
+
+    // FIXED: Silent reload, and instantly open the leave tab
     await loadData(true);
-    openKhata(s.id);
-    switchKhataTab("leave");
+    openKhata(s.id, "leave");
   } catch (err) {
     console.error(err);
   }
@@ -237,12 +339,27 @@ async function postKhata(type) {
   if (type === "salary") newBalance += amt;
   if (type === "cash") newBalance -= amt;
 
-  const newTx = {
-    date: new Date().toISOString().split("T")[0],
-    type: type,
-    amount: amt,
-  };
-  const updatedKhata = s.khata ? [...s.khata, newTx] : [newTx];
+  const dateStr = new Date().toISOString().split("T")[0];
+
+  // 1. Copy the existing Khata
+  let updatedKhata = s.khata ? [...s.khata] : [];
+
+  // 2. Check if a row already exists for this exact date and type (salary or cash)
+  let existingIndex = updatedKhata.findIndex(
+    (t) => t.date === dateStr && t.type === type,
+  );
+
+  if (existingIndex >= 0) {
+    // 3a. If it exists, just add the money to that row
+    updatedKhata[existingIndex].amount += amt;
+  } else {
+    // 3b. If it doesn't exist, create a new row
+    updatedKhata.push({
+      date: dateStr,
+      type: type,
+      amount: amt,
+    });
+  }
 
   try {
     await pb
@@ -255,6 +372,106 @@ async function postKhata(type) {
   }
 }
 
+// NEW: Post Item to Khata
+// Update postItem
+async function postItem() {
+  if (!Auth.checkIsAdmin()) return;
+
+  const s = staff.find((x) => x.id === activeStaffId);
+  if (!s) return;
+
+  const dateStr = document.getElementById("k-item-date").value;
+  const itemId = document.getElementById("k-item-sel").value;
+  const qty = parseFloat(document.getElementById("k-item-qty").value);
+  const customRate = parseFloat(document.getElementById("k-item-rate").value);
+  const remark = document.getElementById("k-item-rem").value.trim();
+  const deducted = document.getElementById("k-item-deduct").checked;
+
+  if (
+    !dateStr ||
+    !itemId ||
+    !qty ||
+    qty <= 0 ||
+    isNaN(customRate) ||
+    customRate < 0
+  ) {
+    return customAlert(
+      "Please provide the date, select an item, a valid quantity, and a valid rate.",
+    );
+  }
+
+  const dbItem = items.find((i) => i.id === itemId);
+  if (!dbItem) return;
+
+  if (dbItem.hasStock && qty > dbItem.stockQty) {
+    return customAlert(
+      `Only ${dbItem.stockQty} ${dbItem.unit} available in stock.`,
+    );
+  }
+
+  const amount = customRate * qty;
+  let newBalance = s.balance;
+
+  if (deducted) newBalance -= amount;
+
+  // 1. Copy the existing Khata
+  let updatedKhata = s.khata ? [...s.khata] : [];
+
+  // 2. Look for the exact same item, on the exact same date, at the exact same rate
+  let existingIndex = updatedKhata.findIndex(
+    (t) =>
+      t.date === dateStr &&
+      t.type === "item" &&
+      t.itemName === dbItem.name &&
+      t.deducted === deducted &&
+      t.rate === customRate,
+  );
+
+  if (existingIndex >= 0) {
+    // 3a. If it exists, aggregate the math!
+    updatedKhata[existingIndex].qty += qty;
+    updatedKhata[existingIndex].amount += amount;
+
+    // Combine remarks if a new one is typed
+    if (remark) {
+      if (updatedKhata[existingIndex].remark) {
+        updatedKhata[existingIndex].remark += " | " + remark;
+      } else {
+        updatedKhata[existingIndex].remark = remark;
+      }
+    }
+  } else {
+    // 3b. If it doesn't exist, create a new row
+    updatedKhata.push({
+      date: dateStr,
+      type: "item",
+      amount: amount,
+      itemName: dbItem.name,
+      qty: qty,
+      rate: customRate,
+      remark: remark,
+      deducted: deducted,
+    });
+  }
+
+  try {
+    if (dbItem.hasStock) {
+      const newQty = Math.max(0, dbItem.stockQty - qty);
+      await pb.collection("items").update(dbItem.id, { stockQty: newQty });
+    }
+
+    await pb
+      .collection("staff")
+      .update(s.id, { balance: newBalance, khata: updatedKhata });
+
+    await loadData(true);
+    openKhata(s.id, "items");
+  } catch (err) {
+    console.error(err);
+    customAlert("Failed to save item.");
+  }
+}
+
 async function runAutoSalary() {
   if (!Auth.checkIsAdmin()) return;
 
@@ -263,7 +480,6 @@ async function runAutoSalary() {
   );
 
   if (eligible.length === 0) {
-    // NEW: Using customAlert instead of native alert
     await customAlert(
       "No active staff found with Auto-Salary enabled and a valid base salary.",
     );
@@ -275,11 +491,10 @@ async function runAutoSalary() {
     year: "numeric",
   });
 
-  // NEW: Using customConfirm instead of native confirm
   const proceed = await customConfirm(
     `Are you sure you want to run bulk auto-salary?\n\nThis will instantly credit the base salary into the Khata of ${eligible.length} active employees for the month of ${monthName}.`,
   );
-  if (!proceed) return; // If they click Cancel, stop here
+  if (!proceed) return;
 
   toggleLoader(true, "Processing Bulk Payroll...");
   const today = new Date().toISOString().split("T")[0];
@@ -311,7 +526,6 @@ async function runAutoSalary() {
   await loadData(true);
   toggleLoader(false);
 
-  // NEW: Final customAlert message
   await customAlert(
     processedCount > 0
       ? `Success! Auto-Salary successfully processed for ${processedCount} employees.`

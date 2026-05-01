@@ -268,10 +268,13 @@ function openEntry(id = null) {
     fp.src = "";
   }
 
-  if (!e.date)
-    document.getElementById("f-date").value = new Date()
-      .toISOString()
-      .split("T")[0];
+  // Set the current date and restrict future dates!
+  const dateEl = document.getElementById("f-date");
+  if (!e.date) {
+    dateEl.value = new Date().toISOString().split("T")[0];
+  }
+  dateEl.max = new Date().toISOString().split("T")[0]; // Prevents future selection
+
   openOv("ov-entry");
 }
 

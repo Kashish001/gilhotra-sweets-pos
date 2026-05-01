@@ -1572,13 +1572,26 @@
 
 // src/js/app.js
 
+// src/js/app.js
+
 function rDashboard(overrideDate = null) {
   const targetDate = overrideDate || new Date().toISOString().split("T")[0];
   const isToday = targetDate === new Date().toISOString().split("T")[0];
 
+  // Restrict the date picker to 'Today' at the maximum
+  const todayStr = new Date().toISOString().split("T")[0];
+
   document.getElementById("dash-date-title").innerHTML =
     `${isToday ? "Today's Summary" : "Past Summary"}
-    <input type="date" value="${targetDate}" onchange="rDashboard(this.value)" style="margin-left: 12px; font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--bd2); background: var(--bg-surface); color: var(--tx-1); font-family: inherit;">`;
+    <input type="date" value="${targetDate}" max="${todayStr}" onchange="rDashboard(this.value)" style="margin-left: 12px; font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--bd2); background: var(--bg-surface); color: var(--tx-1); font-family: inherit;">`;
+
+  // Dynamically change the Activity Log title
+  const logTitle = document.getElementById("dash-log-title");
+  if (logTitle) {
+    logTitle.innerText = isToday
+      ? "Today's Activity Log"
+      : `Activity Log for ${fd(targetDate)}`;
+  }
 
   let todaySales = 0,
     moneyIn = 0,
@@ -1638,5 +1651,5 @@ function rDashboard(overrideDate = null) {
     `<div style="padding: 40px; text-align: center; color: var(--tx-3);">No transactions on this date.</div>`;
 }
 
-// 🚀 Start the Application via the Auth system
+// Start the Application via the Auth system
 Auth.init();
