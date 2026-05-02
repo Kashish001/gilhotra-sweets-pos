@@ -1307,9 +1307,33 @@
                                 "
                             ></div>
                         </div>
-                        <button class="mclose" onclick="closeOv('ov-khata')">
-                            &#215;
-                        </button>
+                        <!-- ADDED: Print Button next to the Close Button -->
+                        <div
+                            style="
+                                display: flex;
+                                gap: 12px;
+                                align-items: center;
+                            "
+                        >
+                            <button
+                                class="btn btn-sm"
+                                style="
+                                    background: var(--bg-surface);
+                                    border: 1px solid var(--bd);
+                                    font-weight: bold;
+                                    color: var(--tx-1);
+                                "
+                                onclick="printKhata()"
+                            >
+                                &#128438; Print Report
+                            </button>
+                            <button
+                                class="mclose"
+                                onclick="closeOv('ov-khata')"
+                            >
+                                &#215;
+                            </button>
+                        </div>
                     </div>
                     <div class="mbody" style="background: var(--bg-app)">
                         <div
