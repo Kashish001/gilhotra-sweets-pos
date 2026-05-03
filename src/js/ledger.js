@@ -232,6 +232,15 @@ function openEntry(id = null) {
     ? "Edit Bill Entry"
     : "Create New Bill";
 
+  // 1. Setup the Item Rows FIRST (This triggers the auto-calc that was wiping the total)
+  currentItemRows =
+    e.itemDetails && e.itemDetails.length > 0
+      ? JSON.parse(JSON.stringify(e.itemDetails))
+      : [{ name: "", qty: 1, rate: 0, amt: 0 }];
+
+  renderItemRows();
+
+  // 2. NOW, load the actual saved database values to safely override the auto-calculations
   [
     "billNo",
     "date",
@@ -251,11 +260,7 @@ function openEntry(id = null) {
   document.getElementById("f-adv").value = e.adv !== undefined ? e.adv : "";
   document.getElementById("f-status").value = e.status || "Pending";
 
-  currentItemRows =
-    e.itemDetails && e.itemDetails.length > 0
-      ? JSON.parse(JSON.stringify(e.itemDetails))
-      : [{ name: "", qty: 1, rate: 0, amt: 0 }];
-  renderItemRows();
+  // 3. Finally, calculate the pending balance based on the restored values
   autoCalc();
 
   const fp = document.getElementById("fprev");
@@ -268,12 +273,12 @@ function openEntry(id = null) {
     fp.src = "";
   }
 
-  // Set the current date and restrict future dates!
+  // 4. Set the current date and restrict future dates
   const dateEl = document.getElementById("f-date");
   if (!e.date) {
     dateEl.value = new Date().toISOString().split("T")[0];
   }
-  dateEl.max = new Date().toISOString().split("T")[0]; // Prevents future selection
+  dateEl.max = new Date().toISOString().split("T")[0];
 
   openOv("ov-entry");
 }
