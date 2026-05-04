@@ -37,22 +37,44 @@ function setPosCat(c) {
   rPos();
 }
 
-function addPosItem(id) {
-  const item = items.find((i) => i.id === id);
-  if (!item) return;
+async function addPosItem(id) {
+  const dbItem = items.find((i) => i.id === id);
+  if (!dbItem) return;
 
-  const existing = posCart.find((i) => i.id === id);
-  const currentCartQty = existing ? existing.qty : 0;
+  let itemPrice = dbItem.price;
 
-  if (item.hasStock && currentCartQty + 1 > item.stockQty) {
+  // VARIABLE PRICING LOGIC: If price is 0, ask the user for the price!
+  if (itemPrice === 0) {
+    const customPrice = await customPrompt(
+      `Enter the price for ${dbItem.name} (per ${dbItem.unit}):`,
+    );
+    if (customPrice === null || customPrice === "") return; // User cancelled
+    itemPrice = parseFloat(customPrice) || 0;
+  }
+
+  // Look for the item in the cart.
+  // We match by BOTH ID and Price so you can ring up a 10rs Kurkure and a 20rs Kurkure in the same bill!
+  const existing = posCart.find((i) => i.id === id && i.price === itemPrice);
+
+  // Calculate total quantity of this specific item ID currently in the cart
+  const currentCartQty = posCart
+    .filter((i) => i.id === id)
+    .reduce((sum, i) => sum + i.qty, 0);
+
+  if (dbItem.hasStock && currentCartQty + 1 > dbItem.stockQty) {
     customAlert(
-      `Cannot add! Only ${item.stockQty} ${item.unit} available in stock.`,
+      `Cannot add! Only ${dbItem.stockQty} ${dbItem.unit} available in stock.`,
     );
     return;
   }
 
-  if (existing) existing.qty += 1;
-  else posCart.push({ ...item, qty: 1 });
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    // Add it as a new line item with the custom price
+    posCart.push({ ...dbItem, price: itemPrice, qty: 1 });
+  }
+
   rPosCart();
 }
 

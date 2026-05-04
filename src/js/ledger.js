@@ -142,6 +142,11 @@ function updIrName(i, val) {
     if (rateEl) rateEl.value = match.price;
     if (amtEl) amtEl.value = currentItemRows[i].amt.toFixed(2);
     calcTotalFromRows();
+
+    // VARIABLE PRICING: If the item is 0 price, auto-focus the rate box!
+    if (match.price === 0 && rateEl) {
+      setTimeout(() => rateEl.focus(), 50);
+    }
   }
 }
 
@@ -400,6 +405,12 @@ async function deleteEntry(id) {
       console.error("Delete Error:", err);
     }
   }
+}
+
+function viewImgPreview() {
+  if (!imgData) return; // Ignore if no image is uploaded
+  document.getElementById("bigimg").src = imgData;
+  openOv("ov-img"); // Uses your existing full-screen viewer!
 }
 
 function viewImg(id) {

@@ -33,6 +33,36 @@ window.customConfirm = function (msg) {
   });
 };
 
+window.customPrompt = function (msg, defaultVal = "") {
+  return new Promise((resolve) => {
+    document.getElementById("dialog-msg").innerText = msg;
+    window._dialogResolve = resolve;
+
+    // Inject an input box and buttons into the dialog
+    document.getElementById("dialog-btns").innerHTML = `
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
+            <input id="prompt-input" type="number" step="any" value="${defaultVal}" style="width:100%; padding: 12px; border:1px solid var(--bd2); border-radius:6px; font-size:16px; background: var(--bg-input); color: var(--tx-1);" placeholder="Enter price...">
+            <div style="display:flex; gap:12px;">
+                <button class="btn" style="flex:1;" onclick="closeOv('ov-dialog'); window._dialogResolve(null);">Cancel</button>
+                <button class="btn btn-a" style="flex:1;" onclick="closeOv('ov-dialog'); window._dialogResolve(document.getElementById('prompt-input').value);">OK</button>
+            </div>
+        </div>
+    `;
+
+    openOv("ov-dialog");
+
+    // Allow hitting 'Enter' to submit the prompt
+    const inputEl = document.getElementById("prompt-input");
+    setTimeout(() => inputEl.focus(), 100);
+    inputEl.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        closeOv("ov-dialog");
+        window._dialogResolve(this.value);
+      }
+    });
+  });
+};
+
 const originalConfirm = window.confirm;
 window.confirm = function (message) {
   const result = originalConfirm(message);
