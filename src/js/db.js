@@ -2,11 +2,18 @@
 
 const pb = new window.PocketBase("http://127.0.0.1:8090");
 
+// const SHOP = {
+//   name: "Gilhotra Sweets",
+//   tag: "Pure Desi Ghee Mithai \u2022 Since 1985",
+//   addr: "Main Bazar, Morinda",
+//   ph: "98765 43210",
+// };
+
 const SHOP = {
-  name: "Gilhotra Sweets",
-  tag: "Pure Desi Ghee Mithai \u2022 Since 1985",
-  addr: "Main Bazar, Morinda",
-  ph: "98765 43210",
+  name: "",
+  tag: "",
+  addr: "",
+  ph: "",
 };
 
 // --- CUSTOM DIALOG SYSTEM ---
@@ -83,6 +90,7 @@ let entries = [],
   items = [],
   staff = [],
   pos_bills = [];
+orders = [];
 let activeStaffId = null;
 let expandedCusts = new Set();
 let currentItemRows = [];
@@ -165,6 +173,24 @@ async function loadData(silent = false) {
       items: r.items,
       created: r.created,
     }));
+
+    const orderRecords = await pb
+      .collection("orders")
+      .getFullList({ sort: "-created" });
+    orders = orderRecords.map((r) => ({
+      id: r.id,
+      name: r.name,
+      so: r.so, // NEW
+      village: r.village, // NEW
+      co: r.co,
+      mobile: r.mobile,
+      date: r.date,
+      items: r.items,
+      adv: r.adv,
+      mode: r.mode,
+      status: r.status,
+      rem: r.rem,
+    }));
   } catch (err) {
     console.error("Database connection failed. Is PocketBase running?", err);
   }
@@ -216,6 +242,8 @@ function goTab(tab, btn) {
   if (tab === "pos") rPos();
   if (tab === "items") rItems();
   if (tab === "staff") rStaff();
+  if (tab === "orders") rOrders();
+  if (tab === "prep") rPrep();
 }
 
 function openOv(id) {
@@ -253,4 +281,9 @@ document.addEventListener("click", function (e) {
   const input = document.getElementById("f-name");
   if (dd && e.target !== input && !dd.contains(e.target))
     dd.style.display = "none";
+
+  const ddO = document.getElementById("cust-dropdown-orders");
+  const inputO = document.getElementById("fo-name");
+  if (ddO && e.target !== inputO && !ddO.contains(e.target))
+    ddO.style.display = "none";
 });

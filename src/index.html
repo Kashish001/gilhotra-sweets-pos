@@ -145,6 +145,12 @@
                     <button class="tab" onclick="goTab('staff', this)">
                         <span class="tab-icon">&#128104;</span> Staff Khata
                     </button>
+                    <button class="tab" onclick="goTab('orders', this)">
+                        <span class="tab-icon">&#128197;</span> Order Booking
+                    </button>
+                    <button class="tab" onclick="goTab('prep', this)">
+                        <span class="tab-icon">&#128203;</span> Kitchen Prep
+                    </button>
                 </div>
 
                 <div class="sidebar-foot">
@@ -672,6 +678,205 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tc" id="orders-tc">
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-bottom: 20px;
+                            "
+                        >
+                            <div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 16px;
+                                    "
+                                >
+                                    <h2
+                                        style="
+                                            color: var(--tx-1);
+                                            font-weight: 500;
+                                            font-size: 22px;
+                                        "
+                                    >
+                                        Advance Bookings
+                                    </h2>
+                                    <input
+                                        type="date"
+                                        id="orders-date-picker"
+                                        onchange="rOrders(this.value)"
+                                        style="
+                                            padding: 6px 12px;
+                                            border: 1px solid var(--bd2);
+                                            border-radius: 6px;
+                                            background: var(--bg-surface);
+                                            color: var(--accent);
+                                            font-weight: bold;
+                                            font-family: inherit;
+                                        "
+                                    />
+                                </div>
+                                <div
+                                    style="
+                                        color: var(--tx-3);
+                                        font-size: 13px;
+                                        margin-top: 4px;
+                                    "
+                                >
+                                    Track advance orders and scheduled
+                                    deliveries by date.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bar">
+                            <input
+                                class="srch"
+                                id="o-srch"
+                                placeholder="Search customer name or mobile..."
+                                oninput="rOrders()"
+                            />
+                            <div style="flex: 1"></div>
+                            <button
+                                class="btn btn-a"
+                                onclick="openOrderModal()"
+                            >
+                                + Book New Order
+                            </button>
+                        </div>
+
+                        <div class="tbl-box">
+                            <div class="tbl-scroll">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 180px">
+                                                Customer Details
+                                            </th>
+                                            <th style="width: 250px">
+                                                Items Ordered
+                                            </th>
+                                            <th style="width: 120px">
+                                                Advance Paid
+                                            </th>
+                                            <th style="width: 150px">
+                                                Remarks
+                                            </th>
+                                            <th
+                                                style="
+                                                    width: 100px;
+                                                    text-align: center;
+                                                "
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                style="
+                                                    width: 100px;
+                                                    text-align: center;
+                                                "
+                                            >
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="otbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tc" id="prep-tc">
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                margin-bottom: 20px;
+                            "
+                        >
+                            <div>
+                                <div
+                                    style="
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 16px;
+                                    "
+                                >
+                                    <h2
+                                        style="
+                                            color: var(--tx-1);
+                                            font-weight: 500;
+                                            font-size: 22px;
+                                        "
+                                    >
+                                        Production & Kitchen Prep List
+                                    </h2>
+                                    <input
+                                        type="date"
+                                        id="prep-date-picker"
+                                        onchange="rPrep(this.value)"
+                                        style="
+                                            padding: 6px 12px;
+                                            border: 1px solid var(--bd2);
+                                            border-radius: 6px;
+                                            background: var(--bg-surface);
+                                            color: var(--accent);
+                                            font-weight: bold;
+                                            font-family: inherit;
+                                        "
+                                    />
+                                </div>
+                                <div
+                                    style="
+                                        color: var(--tx-3);
+                                        font-size: 13px;
+                                        margin-top: 4px;
+                                    "
+                                >
+                                    Auto-calculated total quantities required to
+                                    fulfill all orders on this date.
+                                </div>
+                            </div>
+                            <button
+                                class="btn btn-a"
+                                style="
+                                    background: var(--bg-card);
+                                    color: var(--tx-1);
+                                    border: 1px solid var(--bd);
+                                "
+                                onclick="printPrepList()"
+                            >
+                                &#128438; Print Prep List
+                            </button>
+                        </div>
+
+                        <div class="tbl-box" style="max-width: 700px">
+                            <div class="tbl-scroll">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 70%">
+                                                Item Name (To be prepared)
+                                            </th>
+                                            <th
+                                                style="
+                                                    width: 30%;
+                                                    text-align: right;
+                                                "
+                                            >
+                                                Total Quantity Required
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="prep-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -984,6 +1189,193 @@
                             onclick="doPrint()"
                         >
                             &#128438; Print / Save PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ov" id="ov-order">
+                <div class="mbox" style="width: 500px">
+                    <div class="mhd">
+                        <div class="mtitle" id="order-title">
+                            Book New Order
+                        </div>
+                        <div
+                            style="
+                                display: flex;
+                                gap: 12px;
+                                align-items: center;
+                            "
+                        >
+                            <button
+                                class="btn btn-sm"
+                                style="
+                                    background: var(--bg-surface);
+                                    border: 1px solid var(--bd);
+                                    font-weight: bold;
+                                    color: var(--tx-1);
+                                "
+                                onclick="printOrder()"
+                            >
+                                &#128438; Print Receipt
+                            </button>
+                            <button
+                                class="mclose"
+                                onclick="closeOv('ov-order')"
+                            >
+                                &#215;
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mbody">
+                        <div class="fg">
+                            <div class="ff full">
+                                <label>Delivery / Fulfillment Date</label
+                                ><input
+                                    id="fo-date"
+                                    type="date"
+                                    style="
+                                        font-weight: bold;
+                                        color: var(--accent);
+                                    "
+                                />
+                            </div>
+
+                            <div
+                                class="ff full"
+                                style="
+                                    border-top: 1px dashed var(--bd);
+                                    padding-top: 16px;
+                                    margin-top: 8px;
+                                "
+                            >
+                                <label style="color: var(--accent)"
+                                    >Customer Details</label
+                                >
+                            </div>
+
+                            <div class="ff">
+                                <label>Customer Name</label>
+                                <input
+                                    id="fo-name"
+                                    placeholder="Full name"
+                                    oninput="checkExistingCustomerOrders()"
+                                    autocomplete="off"
+                                />
+                                <div
+                                    id="cust-dropdown-orders"
+                                    class="autofill-dropdown"
+                                ></div>
+                            </div>
+                            <div class="ff">
+                                <label>Father's Name (S/O)</label
+                                ><input id="fo-so" placeholder="Son of" />
+                            </div>
+                            <div class="ff">
+                                <label>Mobile</label
+                                ><input
+                                    id="fo-mobile"
+                                    type="tel"
+                                    placeholder="9876543210"
+                                />
+                            </div>
+                            <div class="ff">
+                                <label>Village / Area</label
+                                ><input
+                                    id="fo-village"
+                                    placeholder="Village or area"
+                                />
+                            </div>
+                            <div class="ff full">
+                                <label>Care of (C/O)</label
+                                ><input id="fo-co" placeholder="Referred by" />
+                            </div>
+
+                            <div
+                                class="ff full"
+                                style="
+                                    background: var(--bg-surface);
+                                    border: 1px solid var(--bd);
+                                    border-radius: 12px;
+                                    padding: 16px;
+                                    margin-top: 8px;
+                                "
+                            >
+                                <div
+                                    style="
+                                        display: flex;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        margin-bottom: 12px;
+                                    "
+                                >
+                                    <label
+                                        style="
+                                            font-size: 13px;
+                                            font-weight: bold;
+                                            color: var(--tx-2);
+                                            margin: 0;
+                                        "
+                                        >Items Needed</label
+                                    >
+                                    <button
+                                        class="btn btn-sm"
+                                        onclick="addOrderIr()"
+                                        style="background: #fff"
+                                    >
+                                        + Add Item
+                                    </button>
+                                </div>
+                                <div id="order-items-container"></div>
+                            </div>
+
+                            <div class="ff">
+                                <label>Advance Amount (&#8377;)</label
+                                ><input
+                                    id="fo-adv"
+                                    type="number"
+                                    step="any"
+                                    min="0"
+                                    placeholder="0"
+                                    style="
+                                        color: var(--green);
+                                        font-weight: bold;
+                                    "
+                                />
+                            </div>
+                            <div class="ff">
+                                <label>Mode of Payment</label>
+                                <select id="fo-mode">
+                                    <option>Cash</option>
+                                    <option>UPI</option>
+                                    <option>Bank Transfer</option>
+                                    <option>No Advance</option>
+                                </select>
+                            </div>
+
+                            <div class="ff full">
+                                <label>Status</label>
+                                <select id="fo-status">
+                                    <option>Pending</option>
+                                    <option>Delivered</option>
+                                    <option>Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="ff full">
+                                <label>Remarks / Customizations</label
+                                ><input
+                                    id="fo-rem"
+                                    placeholder="e.g. Less sugar, pack in 1kg boxes..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mft">
+                        <button class="btn" onclick="closeOv('ov-order')">
+                            Cancel
+                        </button>
+                        <button class="btn btn-a" onclick="saveOrder()">
+                            Save Booking
                         </button>
                     </div>
                 </div>
@@ -1877,6 +2269,8 @@
         <script src="js/ledger.js"></script>
         <script src="js/staff.js"></script>
         <script src="js/items.js"></script>
+        <script src="js/orders.js"></script>
+        <script src="js/prep.js"></script>
         <script src="js/app.js"></script>
     </body>
 </html>

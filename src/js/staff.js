@@ -624,7 +624,7 @@ function printKhata() {
         <div class="header">
             <h1 style="font-size: 28px;">${SHOP.name}</h1>
             <div style="font-size: 14px; color: #555;">${SHOP.tag}</div>
-            <div style="font-size: 14px; color: #555;">${SHOP.addr} | Ph: ${SHOP.ph}</div>
+            <div style="font-size: 14px; color: #555;">${SHOP.addr} ${SHOP.ph ? `|&nbsp; Ph: ${SHOP.ph}` : ""}</div>
         </div>
 
         <div class="emp-card">
